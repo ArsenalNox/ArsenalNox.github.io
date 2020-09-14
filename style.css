@@ -3,6 +3,8 @@ body{
     padding: 0; 
     overflow: hidden;
     background-image: url('82b.gif');
+    touch-action: manipulation;
+
 }
 .game-space{
     width: 100%;
