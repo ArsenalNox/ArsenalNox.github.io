@@ -62,6 +62,5 @@ document.addEventListener('keypress',KeyHandler);
 GeneratePlatforms()
 
 GenerateEnemy()
-
 PlayerStatusManagment()
 var GameTimer =  setInterval(TimedHandler, 200)

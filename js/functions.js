@@ -418,3 +418,7 @@ function GenerateExit(){
     alert('Уровень пройден!')
     Win = true
 }
+
+function SetKey(key){
+    keypressed = key
+}
