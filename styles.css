@@ -1,0 +1,47 @@
+body{
+  margin: 0;
+  padding: 0;
+  background: white;
+}
+.main{
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  box-shadow: 0px 0px 20px 0px;
+  border-radius: 15px;
+  padding: 1rem
+}
+
+#btn-start{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    outline: none;
+    border: 1px dotted black;
+}
+
+.deathscreen{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255 0 0 / 95%);
+  text-align: center;
+  padding: 3rem;
+  border-radius: 10px;
+}
+
+.winscreen{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255 100 0 / 95%);
+  text-align: center;
+  padding: 3rem;
+  border-radius: 10px;
+}

@@ -1,42 +1,26 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en" dir="ltr">
+
 <head>
-    <link rel="stylesheet" href="style.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Not Mario Party</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <title>Платформер</title>
 </head>
-<body>  
 
-        <div class="game-space" id='gs'>
-            <div class = 'stats-bar' id='1-stb'>
-            <p id='points'> Очки: X </p>
-            <p id='time'> 00:00 </p>
-            <p id='life'> Жизни: X </p>
-        </div>
+<body>
 
+  <button type="button" name="button" onclick="GameStart()" id='btn-start'>Начать игру</button>
 
-        <div class="player" id="1-ps"> 
-        <img id='1-pimg-walk' src="data:image/png;base64,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" alt="">
-        <img id='1-pimg-jump' src="https://c7.hotpng.com/preview/649/670/567/new-super-mario-bros-u-super-mario-64-8-bit.jpg" alt="">
-        </div>
-        
-        <div class="earth" id="1-eh"></div>
-    </div>    
-    <div class="mobile_input">
-        <button id='w' onclick="SetKey('w')"> w</button>
-        <br>
-        <div class="row">
-        <button id='a' onclick="SetKey('a')"> a</button>
-        <button id='d' onclick="SetKey('d')"> d</button>
-        </div>
+  <section id='cv' class="main">
+    <div id='gamew'>
+      <canvas id="canvas" width="1024" height="512"></canvas>
+      <p id='data'></p>
     </div>
 
-    </body>
-    <script src="js\jquery-3.5.1.js"></script>
-    <script src="js\functions.js"></script>
-    <script src="js\main.js"></script>
-   
-  
-</html>
+  </section>
 
+
+  <script src="index.js" charset="utf-8"> </script>
+</body>
+
+</html>
