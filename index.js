@@ -12,8 +12,23 @@ var canvas = document.getElementById('canvas'),
   pointreqiured = 6,
   seconds = 0,
   minutes = 0,
-  enrty = false;
-monsterCount = 0;
+  enrty = false,
+  imagestandingR = document.getElementById('mario_standing_R'),
+  imagedamaged = document.getElementById('mario_damaged'),
+  imagestandingL = document.getElementById('mario_standing_L'),
+  imagejumpindR = document.getElementById('mario_jumpng_R'),
+  imagejumpindL = document.getElementById('mario_jumpng_L'),
+  imagewalking1R = document.getElementById('mario_walk_1_R'),
+  imagewalking1L = document.getElementById('mario_walk_1_L'),
+  imagewalking2R = document.getElementById('mario_walk_2_R'),
+  imagewalking2L = document.getElementById('mario_walk_2_L'),
+  imagewalking3R = document.getElementById('mario_walk_3_R'),
+  imagewalking3L = document.getElementById('mario_walk_3_L'),
+  imagebrick = document.getElementById('mario_brick'),
+  imagebackbrick = document.getElementById('mario_backbrick'),
+  grib = document.getElementById('grib')
+walkFrame = 0,
+  monsterCount = 0;
 
 var player = {},
   monsters = [],
@@ -37,10 +52,11 @@ var portal = {}
 portal.x = []
 portal.y = []
 portal.opened = false
+player.lastDirection = 'right'
 // v = p/m
 var enemyposx = [],
-  enemyposy = []
-enemyvel = [],
+  enemyposy = [],
+  enemyvel = [],
   enemydirection = [],
   enemywalked = [];
 var enemyHandler = {
@@ -52,40 +68,110 @@ var enemyHandler = {
 }
 //Карта уровня. 0 - пустота, 1-тайл, 2-сокровище, 3-враг.
 var level0_0 = [
+  'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  'b00000000000000000000000000000001111111111111111111111000002111b',
+  'b00000000000000000001000000000000001000000000000000000000111100b',
+  'b00500000000000000100100000000000001000000000000000000000000000b',
+  'b11100000000100000000010000000100000000000000100000000010000000b',
+  'b00103000000000001000000000000000000000000000000010000010000000b',
+  'b00111111000000000000000000000000000000000000000010000010000000b',
+  'b00000000000000010000000000000010010000000100000011001110000000b',
+  'b00000000000030000000000000000100001000000000000001001000000000b',
+  'b00000000011111000000000000000000001001000000000001001000000000b',
+  'b00020000000020000000000000000000001000000000000001001000000000b',
+  'b00011000000010000000000000000000001000010000000001001000000000b',
+  'b00010000000000000300000000000000001000000000000001001000000000b',
+  'b00000000000000011111111001001000001000000000000001001000000000b',
+  'b00000000002000000000000000000000001000000010000001001000000000b',
+  'b00000000000000000000000000000000001000000000000001001000000000b',
+  'b00020000000000000000003000000000001000000000000001001000000000b',
+  'b00111111111111111111111111110000001000000000010001001000000000b',
+  'b00000000000000000000000000000000000000000000000001001000000000b',
+  'b00000000000000000000000002000000000000000100000001001000000000b',
+  'b00000003000200000000001111110000000000000000000001001000000000b',
+  'b01111111111111100000000000000000000000000000000001001000000000b',
+  'b00000000000000000300000002000000001001000000000001441000000000b',
+  'b01111111111111111111111111110000001000000000000001001000000000b',
+  'b00100000000000000000000000000000001000000000000001001000000000b',
+  'b00100000000000000000000000000000001000010000000001001000000000b',
+  'b00100000000000000000000000000000001000000000000001001000000000b',
+  'b00000000000000000000000000000000001000000000000001001000000000b',
+  'b00100000000000000000000000000000001000000001000001001000000000b',
+  'b00100000000000000000000000000000000000000000000000000000000000b',
+  'b00000000000000000300000000000003330000000300000000000000000000b',
+  'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb ',
+]
+var level0_1 = [
   '1111111111111111111111111111111111111111111111111111111111111111',
-  '1000000000000000000000000000000011111111111111111111110000021111',
-  '1000000000000000000010000000000000010000000000000000000001111001',
-  '1005000000000000001001000000000000010000000000000000000000000001',
-  '1111000000001000000000100000001000000000000001000000000100000001',
-  '1001030000000000010000000000000000100000000000000100000100000001',
-  '1001111110000000000000000000000000100000000000000100000100000001',
-  '1000000000000000100000000000000100100000001000000110011100000001',
-  '1000000000000300000000000000001000010000000000000010010000000001',
-  '1000000000111110000000000000000000010010000000000010010000000001',
-  '1000200000000200000000000000000000010000000000000010010000000001',
-  '1000110000000100100100100100100100010000100000000010010000000001',
-  '1000100000000000003000000000000000010000000000000010010000000001',
-  '1000000000000011111111110010010000010000000000000010010000000001',
-  '1000000300020000000000000030000000010000000100000010010000000001',
-  '1111111111111111110011111111111100010000000000000010010000000001',
-  '1000200000000000000000030000000000010000000000000010010000000001',
-  '1001111111111111111111111111100000010000000000100010010000000001',
-  '1000002000000030000000000000000000000000000000000010010000000001',
-  '1011111111111111111111110001100000000000001000000010010000000001',
-  '1000000030002000000000000000000000000000000000000010010000000001',
-  '1011111111111111111111110001100000000000000000000010010000000001',
-  '1000000000000000003000000020000000010010000000000014410000000001',
-  '1011111111111111111111111111100000010000000000000010010000000001',
-  '1001000000000000000000000000000000010000000000000010010000000001',
-  '1001000000000000000000000000000000010000100000000010010000000001',
-  '1001000000000000000000000000000000010000000000000010010000000001',
-  '1000000000000000000000000000000000010000000000000010010000000001',
-  '1001000000000000000000000000000000010000000010000010010000000001',
-  '1001000000000000000000000000000000000000000000000000000000000001',
-  '1000000000000000003000000000000000000000003000000000000000000001',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000100000000000000000',
+  '0000000000000000000000000000000000000000000000400000000000000000',
+  '0000000000000000000000000000000000000000000000400000000000000000',
+  '0000000000000000000000000000000000000000000000400000000000000000',
+  '1000000000000000000000000000000010000010000000100000000000000000',
+  '1000000000000000000000000100000000000000000000000000000000000000',
+  '1000000000000000000000000000000000000000000000000000000000000000',
+  '1000000000000000001000000000000000000000000000000000000000000000',
+  '1000000000000000000000000000000000000000000000011000000000000000',
+  '1000000000000100000000000000000000000000000000000000000000000000',
+  '1000500200000000000000000000000030000000000000300000000000000000',
+  '1001111110000000000001110000000111111111111111110000000000000000',
+  '1000000000000000000000000000000000000000000000000000000000000000',
+  '1030300300300300300300300300300300300000000000000000000030030001',
   '1111111111111111111111111111111111111111111111111111111111111111 ',
 ]
 
+var level0_2 = [
+  'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000000000000000000000',
+  '0000000000000000000000000000000000000000000000100000000000000000',
+  '0000000000000000000000000000000000000000000000400000000000000000',
+  '0000000000000000000000000000000000000000000000400000000000000000',
+  'b0000000000000000000000000000000000000000000000400000000000000000',
+  'b000000000000000000000000000000010000010000000100000000000000000',
+  'b000000000000000000000000100000000000000000000000000000000000000',
+  'b000000000000000000000000000000000000000000000000000000000000000',
+  'b000000000000000001000000000000000000000000000000000000000000000',
+  'b000000000000000000000000000000000000000000000011000000000000000',
+  'b000000000000100000000000000000000000000000000000000000000000000',
+  'b000500200000000000000000000000000000000000000000000000000000000',
+  'b001111110000000000001110000000000000000000000000000000000000000',
+  'b000000000000000000000000000000000000000000000000000000000000000',
+  'b030300300300300300300300300300300300000000000000000000030030001',
+  'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb ',
+
+]
+var levels = [level0_0, level0_1, level0_2]
 var level = createMatrix(level0_0)
 
 function createMatrix(tocopy) {
@@ -103,19 +189,20 @@ function createMatrix(tocopy) {
 function DrawLevel(todraw) {
   ctx.fillStyle = '#FFFFFF'
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-  //Отрисовка уровня, игрок не рисуется этой функцией, за игрока отвечает updatePlayer()
+  //Отрисовка уровня
   for (let i = 0; i < level.length; i++) {
     for (let j = 0; j < level[1].length; j++) {
       switch (level[i][j]) {
         case '0':
           //пустота
-          ctx.fillStyle = '#ffffff'
+          ctx.fillStyle = '#7ec0ee'
           ctx.fillRect(j * 16, i * 16, 16, 16)
           break;
         case '1':
-          //стена
-          ctx.fillStyle = '#000000'
-          ctx.fillRect(j * 16, i * 16, 16, 16)
+          // //стена
+          // ctx.fillStyle = '#000000'
+          // ctx.fillRect(j * 16, i * 16, 16, 16)
+          ctx.drawImage(imagebrick, j * 16, i * 16, 16, 16)
           break;
         case '2':
           //сокровище
@@ -144,6 +231,9 @@ function DrawLevel(todraw) {
           if (portal.opened) {
             ctx.fillStyle = '#AA00AA'
             ctx.fillRect(j * 16, i * 16, 16, 16)
+          } else {
+            ctx.fillStyle = '#7ec0ee'
+            ctx.fillRect(j * 16, i * 16, 16, 16)
           }
           break;
         case '5':
@@ -157,6 +247,9 @@ function DrawLevel(todraw) {
             ctx.fillStyle = 'red'
             ctx.fillRect(j * 16, i * 16, 16, 16)
           }
+          break;
+        case 'b':
+          ctx.drawImage(imagebackbrick, j * 16, i * 16, 16, 16)
           break;
       }
     }
@@ -194,6 +287,9 @@ function onkey(e) {
 }
 
 function updatePlayer() {
+  if (player.lives <= 0) {
+    killPlayer()
+  }
   //Перемещение и коллизия игрока
   if ((!player.left) & (!player.right)) {
     //если кнопки горизонтального движения не нажаты, трение уменьшает скорость
@@ -209,6 +305,7 @@ function updatePlayer() {
   }
   //ускорение в соответствующую сторону, при условии что текущая скорость не превышает максимальную
   if (player.left) {
+    player.lastDirection = 'left'
     if (!(player.velocityx - accel < -maxvelx)) {
       player.velocityx -= accel;
     } else {
@@ -217,13 +314,17 @@ function updatePlayer() {
     //Проверка коллизии при двежении вправо
     if (
       level[Math.round(player.y)][Math.floor(player.x - 0.05 + player.velocityx)] == 1 ||
-      level[Math.round(player.y - 0.5)][Math.floor(player.x - 0.05 + player.velocityx)] == 1
+      level[Math.round(player.y - 0.5)][Math.floor(player.x - 0.05 + player.velocityx)] == 1 ||
+      level[Math.round(player.y)][Math.floor(player.x - 0.05 + player.velocityx)] == 'b' ||
+      level[Math.round(player.y - 0.5)][Math.floor(player.x - 0.05 + player.velocityx)] == 'b'
+
     ) {
       player.x += 0.01
       player.velocityx = 0
     }
   }
   if (player.right) {
+    player.lastDirection = 'right'
     if (!(player.velocityx + accel > maxvelx)) {
       player.velocityx += accel;
     } else {
@@ -232,7 +333,9 @@ function updatePlayer() {
     //Проверка коллизии при двежении влево
     if (
       level[Math.round(player.y)][Math.floor(player.x + 1 + player.velocityx)] == 1 ||
-      level[Math.round(player.y - 0.5)][Math.floor(player.x + 1 + player.velocityx)] == 1
+      level[Math.round(player.y - 0.5)][Math.floor(player.x + 1 + player.velocityx)] == 1 ||
+        level[Math.round(player.y)][Math.floor(player.x + 1 + player.velocityx)] == 'b' ||
+        level[Math.round(player.y - 0.5)][Math.floor(player.x + 1 + player.velocityx)] == 'b'
     ) {
       player.x -= 0.005
       player.velocityx = 0
@@ -255,7 +358,11 @@ function updatePlayer() {
         level[Math.ceil((player.y - player.velocityy))][Math.ceil(player.x)] == 1 ||
         level[Math.ceil((player.y - 0.5 - player.velocityy))][Math.ceil(player.x)] == 1 ||
         level[Math.floor((player.y - player.velocityy))][Math.floor(player.x)] == 1 ||
-        level[Math.floor((player.y - player.velocityy))][Math.floor(player.x)] == 1
+        level[Math.floor((player.y - player.velocityy))][Math.floor(player.x)] == 1 ||
+        level[Math.ceil((player.y - player.velocityy))][Math.ceil(player.x)] == 'b' ||
+        level[Math.ceil((player.y - 0.5 - player.velocityy))][Math.ceil(player.x)] == 'b' ||
+        level[Math.floor((player.y - player.velocityy))][Math.floor(player.x)] == 'b' ||
+        level[Math.floor((player.y - player.velocityy))][Math.floor(player.x)] == 'b'
       ) {
         player.velocityy = 0
         player.jumpstate = 'Descending'
@@ -270,7 +377,11 @@ function updatePlayer() {
         level[Math.round((player.y - player.velocityy))][Math.round(player.x + 0.4)] == 1 ||
         level[Math.floor((player.y + 0.7 - player.velocityy))][Math.round(player.x + 0.4)] == 1 ||
         level[Math.round((player.y + 0.7 - player.velocityy))][Math.floor(player.x)] == 1 ||
-        level[Math.floor((player.y - player.velocityy))][Math.round(player.x)] == 1
+        level[Math.floor((player.y - player.velocityy))][Math.round(player.x)] == 1 ||
+        level[Math.round((player.y - player.velocityy))][Math.round(player.x + 0.4)] == 'b' ||
+        level[Math.floor((player.y + 0.7 - player.velocityy))][Math.round(player.x + 0.4)] == 'b' ||
+        level[Math.round((player.y + 0.7 - player.velocityy))][Math.floor(player.x)] == 'b' ||
+        level[Math.floor((player.y - player.velocityy))][Math.round(player.x)] == 'b'
       ) {
         player.velocityy = 0;
         player.jumpstate = 'ReadyToJump'
@@ -300,9 +411,6 @@ function updatePlayer() {
     ) {
       if (player.invun == false) {
         player.lives -= 15;
-        if (player.lives <= 0) {
-          killPlayer()
-        }
         setTimeout(damagedplayer, 500);
         player.invun = true;
         player.velocityx = -player.velocityx
@@ -326,20 +434,74 @@ function updatePlayer() {
         win()
       }
     }
-
   }
-
   //окргуление значений для облечения дальнейших вычислений...
   player.velocityx = parseFloat(player.velocityx.toFixed(2))
   player.velocityy = parseFloat(player.velocityy.toFixed(2))
   player.x = parseFloat((player.x + player.velocityx).toFixed(2))
   player.y = parseFloat((player.y - player.velocityy).toFixed(2))
-  if (player.invun == true) {
-    ctx.fillStyle = 'orange';
+  //  ctx.fillRect(player.x * 16, player.y * 16, 16, 16)
+  //Отрисовка соответсвующего спрайта *марио*
+
+  if (player.invun) {
+    //При получении урона
+    walkFrame = 0;
+    ctx.drawImage(imagedamaged, player.x * 16, player.y * 16 - 16, 25, 25)
+  } else if (player.jumpstate != 'ReadyToJump') {
+    //В прыжке
+    walkFrame = 0;
+    switch (player.lastDirection) {
+      case 'left':
+        ctx.drawImage(imagejumpindL, player.x * 16, player.y * 16 - 16, 16, 32)
+        break;
+      case 'right':
+        ctx.drawImage(imagejumpindR, player.x * 16, player.y * 16 - 16, 16, 32)
+        break;
+    }
+  } else if (player.right || player.left) {
+    if(walkFrame == 0){
+      walkFrame = 1
+    }
+    //При движении вправо влево
+    switch (walkFrame) {
+      case 1:
+        if (player.right) {
+          ctx.drawImage(imagewalking1R, player.x * 16, player.y * 16 - 16, 16, 32)
+        }
+        if (player.left) {
+          ctx.drawImage(imagewalking1L, player.x * 16, player.y * 16 - 16, 16, 32)
+        }
+        break;
+      case 2:
+        if (player.right) {
+          ctx.drawImage(imagewalking2R, player.x * 16, player.y * 16 - 16, 16, 32)
+        }
+        if (player.left) {
+          ctx.drawImage(imagewalking2L, player.x * 16, player.y * 16 - 16, 16, 32)
+        }
+        break;
+      case 3:
+        if (player.right) {
+          ctx.drawImage(imagewalking3R, player.x * 16, player.y * 16 - 16, 16, 32)
+        }
+        if (player.left) {
+          ctx.drawImage(imagewalking3L, player.x * 16, player.y * 16 - 16, 16, 32)
+        }
+        break;
+
+    }
   } else {
-    ctx.fillStyle = 'blue';
+    walkFrame = 0;
+    //Если стоит
+    switch (player.lastDirection) {
+      case 'left':
+        ctx.drawImage(imagestandingL, player.x * 16, player.y * 16 - 16, 16, 32)
+        break;
+      case 'right':
+        ctx.drawImage(imagestandingR, player.x * 16, player.y * 16 - 16, 16, 32)
+        break;
+    }
   }
-  ctx.fillRect(player.x * 16, player.y * 16, 16, 16)
 }
 
 function updateMonster() {
@@ -353,7 +515,8 @@ function updateMonster() {
           }
           if (
             level[Math.round(enemyposy[i]) + 1][Math.round(enemyposx[i] + enemyvel[i]) + 1] == '0' ||
-            level[Math.round(enemyposy[i])][Math.round(enemyposx[i] + enemyvel[i]) + 1] == '1'
+            level[Math.round(enemyposy[i])][Math.round(enemyposx[i] + enemyvel[i]) + 1] == '1' ||
+            level[Math.round(enemyposy[i])][Math.round(enemyposx[i] + enemyvel[i]) + 1] == 'b'
           ) {
             enemydirection[i] = 'left'
           }
@@ -364,14 +527,16 @@ function updateMonster() {
           }
           if (
             level[Math.round(enemyposy[i]) + 1][Math.round(enemyposx[i] + enemyvel[i]) - 1] == '0' ||
-            level[Math.round(enemyposy[i])][Math.round(enemyposx[i] + enemyvel[i]) - 1] == '1'
+            level[Math.round(enemyposy[i])][Math.round(enemyposx[i] + enemyvel[i]) - 1] == '1' ||
+            level[Math.round(enemyposy[i])][Math.round(enemyposx[i] + enemyvel[i]) - 1] == 'b'
           ) {
             enemydirection[i] = 'right'
           }
       }
       enemyposx[i] = parseFloat((enemyposx[i] + enemyvel[i]).toFixed(2))
-      ctx.fillStyle = 'red'
-      ctx.fillRect(enemyposx[i] * 16, enemyposy[i] * 16, 16, 16)
+      // ctx.fillStyle = 'red'
+      // ctx.fillRect(enemyposx[i] * 16, enemyposy[i] * 16, 16, 16)
+      ctx.drawImage(grib, enemyposx[i] * 16, enemyposy[i] * 16, 20, 17)
     }
   }
 }
@@ -401,13 +566,10 @@ function damagedplayer() {
 }
 
 function update() {
-  if (!player.dead) {
-    DrawLevel(level0_0)
-    updatePlayer()
-    updateMonster()
-    checkTreasure()
-  }
-
+  DrawLevel(level0_0)
+  updatePlayer()
+  updateMonster()
+  checkTreasure()
 }
 
 function killPlayer() {
@@ -418,6 +580,9 @@ function killPlayer() {
   deathscreen.innerHTML = ' <h2> Вы умерли! </h2> <p>Страница перезагрузится через 5 секунд</p>'
   document.getElementById('cv').append(deathscreen)
   setTimeout(reload, 5000)
+  clearInterval(maingame)
+  clearInterval(mainstat)
+  clearInterval(timer)
 }
 
 function win() {
@@ -427,6 +592,9 @@ function win() {
   winscreen.innerHTML = ' <h2> Вы выйграли! </h2> <p>Страница перезагрузится через 5 секунд</p>'
   document.getElementById('cv').append(winscreen)
   setTimeout(reload, 5000)
+  clearInterval(maingame)
+  clearInterval(mainstat)
+  clearInterval(timer)
 }
 
 function reload() {
@@ -436,13 +604,24 @@ function reload() {
 function status() {
   datapar.innerText = 'Жизни: ' + player.lives + '  Очки: ' + player.points + '\n' + 'Время: ' + minutes + ':' + seconds
 }
+var maingame, mainstat, gametimer, walkTimer;
+
 
 function GameStart() {
   document.getElementById('btn-start').remove()
   document.getElementById('cv').style.display = 'grid'
-  var maingame = setInterval(update, 17)
-  var mainstat = setInterval(status, 100)
-  var gametimer = setInterval(timer, 1000)
+  maingame = setInterval(update, 17)
+  mainstat = setInterval(status, 100)
+  gametimer = setInterval(timer, 1000)
+  walkTimer = setInterval(updateWalk, 200)
+}
+
+function updateWalk() {
+  walkFrame += 1
+  if(walkFrame>3){
+    walkFrame = 1
+  }
+  console.log('FRAME '+walkFrame);
 }
 
 function timer() {
