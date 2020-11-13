@@ -26,10 +26,11 @@ var canvas = document.getElementById('canvas'),
   imagewalking3L = document.getElementById('mario_walk_3_L'),
   imagebrick = document.getElementById('mario_brick'),
   imagebackbrick = document.getElementById('mario_backbrick'),
-  grib = document.getElementById('grib')
-walkFrame = 0,
+  grib = document.getElementById('grib'),
+  coin = document.getElementById('coin'),
+  walkFrame = 0,
   monsterCount = 0;
-
+var maingame, mainstat, gametimer, walkTimer;
 var player = {},
   monsters = [],
   treasures = [],
@@ -199,15 +200,12 @@ function DrawLevel(todraw) {
           ctx.fillRect(j * 16, i * 16, 16, 16)
           break;
         case '1':
-          // //стена
-          // ctx.fillStyle = '#000000'
-          // ctx.fillRect(j * 16, i * 16, 16, 16)
+          //стена
           ctx.drawImage(imagebrick, j * 16, i * 16, 16, 16)
           break;
         case '2':
           //сокровище
-          ctx.fillStyle = '#00cc00'
-          ctx.fillRect(j * 16, i * 16, 16, 16)
+          ctx.drawImage(coin, j * 16, i * 16, 16, 16)
           break;
         case '3':
           //враг
@@ -317,7 +315,6 @@ function updatePlayer() {
       level[Math.round(player.y - 0.5)][Math.floor(player.x - 0.05 + player.velocityx)] == 1 ||
       level[Math.round(player.y)][Math.floor(player.x - 0.05 + player.velocityx)] == 'b' ||
       level[Math.round(player.y - 0.5)][Math.floor(player.x - 0.05 + player.velocityx)] == 'b'
-
     ) {
       player.x += 0.01
       player.velocityx = 0
@@ -334,8 +331,8 @@ function updatePlayer() {
     if (
       level[Math.round(player.y)][Math.floor(player.x + 1 + player.velocityx)] == 1 ||
       level[Math.round(player.y - 0.5)][Math.floor(player.x + 1 + player.velocityx)] == 1 ||
-        level[Math.round(player.y)][Math.floor(player.x + 1 + player.velocityx)] == 'b' ||
-        level[Math.round(player.y - 0.5)][Math.floor(player.x + 1 + player.velocityx)] == 'b'
+      level[Math.round(player.y)][Math.floor(player.x + 1 + player.velocityx)] == 'b' ||
+      level[Math.round(player.y - 0.5)][Math.floor(player.x + 1 + player.velocityx)] == 'b'
     ) {
       player.x -= 0.005
       player.velocityx = 0
@@ -459,7 +456,7 @@ function updatePlayer() {
         break;
     }
   } else if (player.right || player.left) {
-    if(walkFrame == 0){
+    if (walkFrame == 0) {
       walkFrame = 1
     }
     //При движении вправо влево
@@ -604,8 +601,6 @@ function reload() {
 function status() {
   datapar.innerText = 'Жизни: ' + player.lives + '  Очки: ' + player.points + '\n' + 'Время: ' + minutes + ':' + seconds
 }
-var maingame, mainstat, gametimer, walkTimer;
-
 
 function GameStart() {
   document.getElementById('btn-start').remove()
@@ -618,10 +613,10 @@ function GameStart() {
 
 function updateWalk() {
   walkFrame += 1
-  if(walkFrame>3){
+  if (walkFrame > 3) {
     walkFrame = 1
   }
-  console.log('FRAME '+walkFrame);
+  console.log('FRAME ' + walkFrame);
 }
 
 function timer() {
