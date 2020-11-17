@@ -9,13 +9,13 @@ body{
 }
 .main{
   display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  box-shadow: 0px 0px 20px 0px;
-  border-radius: 15px;
-  padding: 1rem
+  /* position: absolute; */
+  /* top: 50%; */
+  /* left: 50%; */
+  /* transform: translate(-50%,-50%); */
+  /* border-radius: 15px; */
+  /* box-shadow: 0px 0px 20px 0px; */
+  /* padding: 1rem */
 }
 
 #btn-start{
@@ -82,4 +82,10 @@ body{
 
 #data{
   width: 70%;
+}
+#gamew{
+  text-align: center;
+}
+.buttons{
+  margin-top: 10%;
 }
