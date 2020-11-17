@@ -10,11 +10,20 @@
 <body>
 
   <button type="button" name="button" onclick="GameStart()" id='btn-start'>Начать игру</button>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <section id='cv' class="main">
     <div id='gamew'>
       <canvas id="canvas" width="1024" height="512"></canvas>
-      <p id='data'></p>
+
+      <div class="buttons">
+        <div class="left-move">
+          <button type="button" onclick="ButtonPress('left')"> ← </button>
+          <button type="button" onclick="ButtonPress('right')"> → </button>
+        </div>
+        <p id='data'></p>
+        <div class="right-jump"> <button type="button" onclick='ButtonPress("jump")'> Прыжок </button> </div>
+      </div>
     </div>
 
   </section>

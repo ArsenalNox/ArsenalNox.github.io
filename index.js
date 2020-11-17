@@ -209,7 +209,7 @@ function DrawLevel(todraw) {
           break;
         case '3':
           //враг
-          console.log('A');
+          // console.log('A');
           enemyposx.push(j);
           enemyposy.push(i);
           enemyvel.push(0);
@@ -271,7 +271,7 @@ function onkey(e) {
       } else {
         player.right = false;
       }
-      e.preventDefault();
+      // e.preventDefault();
       break;
     case 'ArrowUp':
       if (e.type == 'keydown') {
@@ -279,7 +279,7 @@ function onkey(e) {
       } else {
         player.jump = false;
       }
-      e.preventDefault();
+      // e.preventDefault();
       break;
   }
 }
@@ -616,7 +616,7 @@ function updateWalk() {
   if (walkFrame > 3) {
     walkFrame = 1
   }
-  console.log('FRAME ' + walkFrame);
+  // console.log('FRAME ' + walkFrame);
 }
 
 function timer() {
@@ -625,6 +625,56 @@ function timer() {
   if (seconds == 60) {
     minutes++
     seconds = 0
+  }
+}
+
+var timerButtonClickLeft;
+var timerButtonClickRight;
+var timerButtonClickJump;
+
+function ButtonPress(key) {
+  console.log(key);
+  switch (key) {
+    case 'left':
+      clearTimeout(timerButtonClickLeft);
+      onkey({
+        'key': 'ArrowLeft',
+        'type': 'keydown'
+      });
+      timerButtonClickLeft = setTimeout(function() {
+        onkey({
+          'key': 'ArrowLeft',
+          'type': 'keyup'
+        })
+      }, 200)
+      break;
+    case 'right':
+      clearTimeout(timerButtonClickRight);
+      onkey({
+        'key': 'ArrowRight',
+        'type': 'keydown'
+      });
+      timerButtonClickRight = setTimeout(function() {
+        onkey({
+          'key': 'ArrowRight',
+          'type': 'keyup'
+        })
+      }, 200)
+      break;
+    case 'jump':
+      clearTimeout(timerButtonClickJump);
+      onkey({
+        'key': 'ArrowUp',
+        'type': 'keydown'
+      })
+      timerButtonClickJump = setTimeout(function() {
+        onkey({
+          'key': 'ArrowUp',
+          'type': 'keyup'
+        })
+      }, 200)
+      break;
+
   }
 }
 

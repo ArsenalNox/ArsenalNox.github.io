@@ -1,37 +1,38 @@
 function KeyHandler(e){
     //Обработка нажатий
     keypressed = e.key
-    }   
+    }
 
 function Jump(){
     //Обработка прыжка игркока
-    let velocity 
+    let velocity
     switch( JumpFrameCurrent ){
         case 1:
-            velocity = 150 
+            velocity = 150
             break
         case 2:
             velocity = 100
             break
-        case 3: 
-            velocity = 50 
+        case 3:
+            velocity = 50
             break
         case 4:
-            velocity = 25    
+            velocity = 25
             break
         case 5:
             velocity = 0
             IsJumpning = false
             IsDescending = true
             break
-    } 
+    }
     //console.log('Current Jump Frame:', JumpFrameCurrent)
     if( !Collision(PlayerPositionVertical, 'vertical', velocity) ){
         PlayerPositionVertical = PlayerPositionVertical+velocity;
         document.getElementById('1-ps').style.bottom = PlayerPositionVertical + "px"
         JumpFrameCurrent+=1;
     } else {
-        console.log('Col')
+        // console.log('Col')
+
         IsJumpning = false
         PlayerPositionVertical -= 100
         document.getElementById('1-ps').style.bottom = PlayerPositionVertical + 'px'
@@ -42,22 +43,22 @@ function AssignDirection(){
     switch(keypressed){
         case 'w':
             if((IsJumpning == true) & (IsDescending == true)) {
-                //игнорировать нажатие, если в прыжке 
+                //игнорировать нажатие, если в прыжке
                 break
             } else if((IsJumpning == false) & (IsDescending == false)){
                 //иначе инициация прыжка
                 IsJumpning = true
                 JumpFrameCurrent = 1;
                 break
-            }  
+            }
         break
 
         case 's':
-            console.log('Crouch')
-        break   
-        
+            // console.log('Crouch')
+        break
+
         case 'a':
-           
+
             RotatePlayer('l')
             if( !Collision(PlayerPositionHorisontal, 'horisontal', -50)){
                 PlayerPositionHorisontal -= 50
@@ -65,9 +66,9 @@ function AssignDirection(){
                 break
             }
         break
- 
+
         case 'd':
-          
+
             RotatePlayer('r')
             if( !Collision(PlayerPositionHorisontal, 'horisontal', 50) ){
                 PlayerPositionHorisontal += 50
@@ -80,7 +81,7 @@ function AssignDirection(){
 }
 
 function Descend(){
-    //Обработка падения игрока 
+    //Обработка падения игрока
     if(!Collision(PlayerPositionVertical, 'vertical', -50)){
         PlayerPositionVertical -= 50
         if(PlayerPositionVertical <= 35){
@@ -94,42 +95,42 @@ function Descend(){
 
 function Collision(CurrentPos,Orient,Change){
     //определение направления провеки сталкновения
-    //приоритет проверки столкновений земля > окружение > враг 
-    if(Orient == 'vertical'){     
+    //приоритет проверки столкновений земля > окружение > враг
+    if(Orient == 'vertical'){
         let FVPos = CurrentPos + Change
         let FVPlayerCenter = [PlayerPositionHorisontal+50, FVPos+25]
         for(let j = 0; j < MoneyCoordinates.length; j++){
-            if( 
-                (FVPlayerCenter[0] > MoneyCoordinates[j][0]) 
+            if(
+                (FVPlayerCenter[0] > MoneyCoordinates[j][0])
                 &
-                (FVPlayerCenter[0] < MoneyCoordinates[j][0]+80) 
+                (FVPlayerCenter[0] < MoneyCoordinates[j][0]+80)
                  ){
                     if(
-                        (FVPlayerCenter[1] > MoneyCoordinates[j][1]) 
+                        (FVPlayerCenter[1] > MoneyCoordinates[j][1])
                         &
-                        (FVPlayerCenter[1] < MoneyCoordinates[j][1]+80) 
+                        (FVPlayerCenter[1] < MoneyCoordinates[j][1]+80)
                          ){
-                            console.log('Collected money on coordinates ', MoneyCoordinates[j], 'id - '+j)
+                            // console.log('Collected money on coordinates ', MoneyCoordinates[j], 'id - '+j)
                             if( !(document.getElementById(j).style.display == 'none')){
                                 document.getElementById(j).style.display = 'none'
                                 Points++
                             }
                         }
             }
-        }   
+        }
 
-        //Обработка столкновений на вертикальной сои 
+        //Обработка столкновений на вертикальной сои
         //Первая проверка столконения - с землёй
             if( (FVPos == 9) || (FVPos < 10) ){
                 return true
             }
-        
+
             //Проверка столкновения с платформой
             for(let j = 0; j < StoredPlatformCoordinates.length; j++){
                 if(((
                     PlayerPositionHorisontal >= StoredPlatformCoordinates[j][0][0]) & (PlayerPositionHorisontal <= StoredPlatformCoordinates[j][3][0]-1
                     ))
-                    & 
+                    &
                     ((
                     FVPos >= StoredPlatformCoordinates[j][0][1]-30) & (FVPos <= StoredPlatformCoordinates[j][3][1]+30
                     ))){
@@ -144,7 +145,7 @@ function Collision(CurrentPos,Orient,Change){
                 if(((
                     PlayerPositionHorisontal >= EnemyCoordinates-10) & (PlayerPositionHorisontal <= EnemyCoordinates+50
                     ))
-                    & 
+                    &
                     ((
                     FVPos >= 10) & (FVPos <= 80
                     ))){
@@ -153,44 +154,44 @@ function Collision(CurrentPos,Orient,Change){
 
             return false
     } else {
-       
+
         //Обработка столкновений на горизонтальной оси
         let FHPos = CurrentPos + Change
         let FHPlayerCenter = [FHPos+25 , PlayerPositionVertical+50]
 
         //Проверка столкновения с монетой
         for(let j = 0; j < MoneyCoordinates.length; j++){
-            if( 
-                (FHPlayerCenter[0] > MoneyCoordinates[j][0]) 
+            if(
+                (FHPlayerCenter[0] > MoneyCoordinates[j][0])
                 &
-                (FHPlayerCenter[0] < MoneyCoordinates[j][0]+80) 
+                (FHPlayerCenter[0] < MoneyCoordinates[j][0]+80)
                  ){
                     if(
-                        (FHPlayerCenter[1] > MoneyCoordinates[j][1]) 
+                        (FHPlayerCenter[1] > MoneyCoordinates[j][1])
                         &
-                        (FHPlayerCenter[1] < MoneyCoordinates[j][1]+80) 
+                        (FHPlayerCenter[1] < MoneyCoordinates[j][1]+80)
                          ){
-                            console.log('Collected money on coordinates ', MoneyCoordinates[j], 'id - '+j)
+                            // console.log('Collected money on coordinates ', MoneyCoordinates[j], 'id - '+j)
                             if( !(document.getElementById(j).style.display == 'none')){
                                 document.getElementById(j).style.display = 'none'
-                                console.log(MoneyCoordinates)
+                                // console.log(MoneyCoordinates)
                                 Points++
                             }
                         }
             }
-        }   
+        }
 
         //Проверка столконения с левой границей
         if( (FHPos == 9) || (FHPos < 10) ){
             return true
-        } 
+        }
 
         //Проверка столкновения с платформой
         for(let j = 0; j < StoredPlatformCoordinates.length; j++){
             if(((
                 FHPos >= StoredPlatformCoordinates[j][0][0]) & (FHPos <= StoredPlatformCoordinates[j][3][0]-1
                 ))
-                & 
+                &
                 ((
                 PlayerPositionVertical >= StoredPlatformCoordinates[j][0][1]) & (PlayerPositionVertical <= StoredPlatformCoordinates[j][3][1]
                 ))){
@@ -210,14 +211,14 @@ function KillEnemy(){
 function PlayerStatusManagment(){
     //Менеджмент состояний игрока
     document.getElementById('points').innerText = " Очки - " + Points + " ";
-    document.getElementById('life').innerText = '' + Lives + '' 
+    document.getElementById('life').innerText = '' + Lives + ''
 }
 
 function TimedHandler(){
     //вызывается через промежутки времени, выполняет активные функции.
     if(IsJumpning == true){
         Jump()
-    } 
+    }
     if(IsDescending == true){
         Descend()
     }
@@ -225,7 +226,7 @@ function TimedHandler(){
     PlayerStatusManagment()
     DrawJumpState()
     if( (IsJumpning == false) & (IsDescending == false) ){
-        CheckIfAbovePlatform()  
+        CheckIfAbovePlatform()
     }
 
     if(Counter == 3){
@@ -245,10 +246,10 @@ function TimedHandler(){
 function GenerateEnemy(){
     //Генерация врага, определеяется тип, цвет, позиция и агрессивность
     //На экране может быть не более 1 врага...
-    console.log('Generating enemy...')
+    // console.log('Generating enemy...')
     let  Coordinates = GetRandomNumber(5, PlatformCoordinates.length-4)
     EnemyCoordinates = PlatformCoordinates[Coordinates]
-    console.log(EnemyCoordinates)
+    // console.log(EnemyCoordinates)
     let TurtleDiv = document.createElement('div')
     TurtleDiv.id = DefeatedEnemyCount+'em'
     TurtleDiv.className = 'turtle'
@@ -275,40 +276,40 @@ function RotatePlayer(direction){
             }
             break
         case 'l':
-            if(PlayerPositionHorisontal <= 210){ 
+            if(PlayerPositionHorisontal <= 210){
                 document.getElementById('1-pimg-walk').style.transform = 'scaleX(-1)'
                 document.getElementById('1-pimg-jump').style.transform = 'scaleX(-1)'
-            }else{    
+            }else{
                 GameSpace.scrollLeft -= 50
                 document.getElementById('1-pimg-walk').style.transform = 'scaleX(-1)'
                 document.getElementById('1-pimg-jump').style.transform = 'scaleX(-1)'
                 break
-            }    
+            }
             break
     }
 }
 
 function DrawJumpState(){
-    //Выбирает, какую картинку марио отобразить - в прыжке или стоя 
+    //Выбирает, какую картинку марио отобразить - в прыжке или стоя
             if(IsJumpning){
-                document.getElementById('1-pimg-walk').style.display = 'none' 
+                document.getElementById('1-pimg-walk').style.display = 'none'
                 document.getElementById('1-pimg-jump').style.display = 'inline'
             } else {
-                document.getElementById('1-pimg-walk').style.display = 'inline' 
-                document.getElementById('1-pimg-jump').style.display = 'none'    
+                document.getElementById('1-pimg-walk').style.display = 'inline'
+                document.getElementById('1-pimg-jump').style.display = 'none'
             }
 }
 
 function GeneratePlatforms(){
-    console.log('Generating platforms...')
+    // console.log('Generating platforms...')
     let MoneyCoordinatesSelector
     let PlatformCoordinatesSelector
-    let Coordinates 
+    let Coordinates
     //Генерирует на экране платформы и монеты
     for(let i = 0; i < PlatformCount; i++){
         /*
-        Выбор позиции для генерируемой платформы из массива со свобдными координатами 
-        Выбранна координата удааляется из свободных  
+        Выбор позиции для генерируемой платформы из массива со свобдными координатами
+        Выбранна координата удааляется из свободных
         */
         PlatformCoordinatesSelector = GetRandomNumber(0,PlatformCoordinates.length)
         Coordinates = PlatformCoordinates[PlatformCoordinatesSelector]
@@ -322,16 +323,16 @@ function GeneratePlatforms(){
             [Coordinates, 200],
             [Coordinates+150, 200],
             [Coordinates, 250],
-            [Coordinates+150, 250] 
+            [Coordinates+150, 250]
         ])
-        //Запись 
+        //Запись
         document.getElementById('gs').append(platform)
     }
-    console.log('Generated ' + PlatformCount + '  platforms')
+    // console.log('Generated ' + PlatformCount + '  platforms')
     //Генерация монет
     for(let i = 0; i < MoneyCount; i++){
         MoneyCoordinatesSelector = GetRandomNumber(0, PossibleMoneyPositions.length)
-        Coordinates = [PossibleMoneyPositions[MoneyCoordinatesSelector][ 0], PossibleMoneyPositions[MoneyCoordinatesSelector][1]] 
+        Coordinates = [PossibleMoneyPositions[MoneyCoordinatesSelector][ 0], PossibleMoneyPositions[MoneyCoordinatesSelector][1]]
         let coin = document.createElement('div')
         coin.className = 'coin'
         coin.id = i;
@@ -339,7 +340,7 @@ function GeneratePlatforms(){
         coin.style.bottom = Coordinates[1]+'px'
         document.getElementById('gs').append(coin)
         MoneyCoordinates.push(Coordinates)
-    }   
+    }
 }
 
 function GetRandomNumber(min,max){
@@ -357,7 +358,7 @@ function CheckIfAbovePlatform(){
             else{
                 IsDescending = true
             }
-            
+
         }
         }
 }
